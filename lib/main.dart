@@ -14,27 +14,42 @@ class Myapp extends StatefulWidget {
 }
 
 class _MyappState extends State<Myapp> {
-  int count = 0;
-
-  Future<String> downloadfile() {
-    Future<String> result = Future.delayed(Duration(seconds: 10), () {
-      return "I Am Learning Flutter";
-    });
-    return result;
+  String? result;
+  printfilecontent() async {
+    String filecontent = await downloadfile();
+    setState(() {});
+    result = filecontent;
+    print('file content is $filecontent');
+    //return filecontent;
   }
+
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
+    print(result);
     return Scaffold(
-      body: FutureBuilder(
-        future: downloadfile(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Text(snapshot.data.toString());
-          } else
-            return CircularProgressIndicator();
-        },
+      body: result == null ? Text('data') : Text(result!),
+
+      // FutureBuilder(
+      //   future: downloadfile(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.hasData) {
+      //       return Text(snapshot.data.toString());
+      //     } else
+      //       return CircularProgressIndicator();
+      //   },
+      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => printfilecontent(),
       ),
     );
   }
+}
+
+Future<String> downloadfile() {
+  Future<String> result = Future.delayed(Duration(seconds: 10), () {
+    return "I Am Learning Flutter";
+  });
+  return result;
 }
