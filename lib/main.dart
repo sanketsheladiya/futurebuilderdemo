@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import 'futurebuilder.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -14,42 +18,56 @@ class Myapp extends StatefulWidget {
 }
 
 class _MyappState extends State<Myapp> {
-  String? result;
-  printfilecontent() async {
-    String filecontent = await downloadfile();
-    setState(() {});
-    result = filecontent;
-    print('file content is $filecontent');
-    //return filecontent;
-  }
-
-  int count = 0;
-
   @override
   Widget build(BuildContext context) {
-    print(result);
+    print("dd");
     return Scaffold(
-      body: result == null ? Text('data') : Text(result!),
-
-      // FutureBuilder(
-      //   future: downloadfile(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.hasData) {
-      //       return Text(snapshot.data.toString());
-      //     } else
-      //       return CircularProgressIndicator();
-      //   },
-      // ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => printfilecontent(),
+      body: Column(
+        children: [
+          FutureBuilder(
+            builder: (context, snapshot) {
+              if (snapshot.hasData)
+                return Text(snapshot.data.toString());
+              else
+                return CircularProgressIndicator();
+            },
+            future: _calculateSquare(10),
+          ),
+          StreamBuilder(
+            builder: (context, snapshot) {
+              if (snapshot.hasData)
+                return Text(snapshot.data.toString());
+              else
+                return CircularProgressIndicator();
+            },
+            stream: timevalue(), // Counter.counterstream,
+          )
+        ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => Counter.setdata = 6,
+      // ),
     );
   }
 }
 
-Future<String> downloadfile() {
-  Future<String> result = Future.delayed(Duration(seconds: 10), () {
-    return "I Am Learning Flutter";
-  });
-  return result;
+Future<int> _calculateSquare(int num) async {
+  await Future.delayed(const Duration(seconds: 5));
+  return num * num;
+}
+
+Stream<int> _stopwatch() async* {
+  int count = 0;
+  while (true) {
+    await Future.delayed(const Duration(seconds: 1));
+    yield count++;
+  }
+}
+
+Stream<int> _startimer() async* {
+  int count = 0;
+  while (true) {
+    await Future.delayed(const Duration(seconds: 1));
+    yield count++;
+  }
 }
